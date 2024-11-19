@@ -1,8 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuthStore } from "../../security/store/useAuthStore";
 
 export const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const logout = useAuthStore((state) => state.logout);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  const handleLogout = () => {
+    logout();
+  }
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -45,11 +53,39 @@ export const Nav = () => {
             Blog
           </Link>
           <Link
-            href="/home"
+            to="/home"
             className="my-1 text-white hover:text-unah-yellow md:mx-4 md:my-0"
           >
             Sobre nosotros
           </Link>
+          <Link
+            to="/administration/dashboard"
+            className="my-1 text-white hover:text-unah-yellow md:mx-4 md:my-0"
+          >
+            Administración
+          </Link>
+
+          {
+            isAuthenticated
+            ? (
+              <button
+                onClick={handleLogout}
+                className="my-1 text-white hover:text-unah-yellow md:mx-4 md:my-0"
+              >
+                Salir
+              </button>
+            )
+            : (
+              <Link
+              to="/security/login"
+              className="my-1 text-white hover:text-unah-yellow md:mx-4 md:my-0"
+            >
+              Iniciar Sesion
+            </Link>
+
+            )
+          }
+
         </div>
       </div>
     </nav>
